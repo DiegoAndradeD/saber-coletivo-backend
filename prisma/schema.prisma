@@ -21,5 +21,22 @@ model User {
   name      String?
   password  String
   createdAt DateTime @default(now())
+  posts     Post[]
+}
 
+model Tag {
+  id    String @id @default(uuid()) // Trocado para uuid para manter padrão
+  name  String @unique
+
+  posts Post[]
+}
+
+model Post {
+  id        String   @id @default(uuid())
+  title     String
+  content   String
+  createdAt DateTime @default(now())
+  tags      Tag[] @relation()
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
 }
