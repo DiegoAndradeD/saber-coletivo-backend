@@ -22,10 +22,11 @@ model User {
   password  String
   createdAt DateTime @default(now())
   posts     Post[]
+  trails    Trail[]
 }
 
 model Tag {
-  id    String @id @default(uuid()) // Trocado para uuid para manter padrão
+  id    String @id @default(uuid())
   name  String @unique
 
   posts Post[]
@@ -39,4 +40,29 @@ model Post {
   tags      Tag[] @relation()
   author    User     @relation(fields: [authorId], references: [id])
   authorId  String
+
+  postsOnTrails PostsOnTrails[]
+}
+
+model Trail {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  createdAt   DateTime @default(now())
+
+  creator     User     @relation(fields: [creatorId], references: [id])
+  creatorId   String
+
+  posts       PostsOnTrails[]
+}
+
+model PostsOnTrails {
+  post    Post   @relation(fields: [postId], references: [id])
+  postId  String
+  trail   Trail  @relation(fields: [trailId], references: [id], onDelete: Cascade) // Deleta a junção se a trilha for deletada
+  trailId String
+
+  order   Int
+
+  @@id([postId, trailId])
 }
