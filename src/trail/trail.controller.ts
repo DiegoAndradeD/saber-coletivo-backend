@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { TrailService } from './trail.service';
 import { CreateTrailDto } from './dto/create-trail.dto';
@@ -21,6 +22,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import type { User } from '@prisma/client';
+import { GetTrailsDto } from './dto/get-trails.dto';
 
 @ApiTags('trail')
 @Controller('trail')
@@ -40,8 +42,8 @@ export class TrailController {
   @Get()
   @ApiOperation({ summary: 'Listar todas as trilhas' })
   @ApiResponse({ status: 200, description: 'Lista de trilhas.' })
-  findAll() {
-    return this.trailService.findAll();
+  findAll(@Query() dto: GetTrailsDto) {
+    return this.trailService.findAll(dto);
   }
 
   @Get(':id')

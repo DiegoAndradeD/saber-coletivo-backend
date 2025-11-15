@@ -3,6 +3,7 @@ import { TrailRepository } from './trail.repository';
 import { CreateTrailDto } from './dto/create-trail.dto';
 import { UpdateTrailDto } from './dto/update-trail.dto';
 import { User } from '@prisma/client';
+import { GetTrailsDto } from './dto/get-trails.dto';
 
 @Injectable()
 export class TrailService {
@@ -12,8 +13,8 @@ export class TrailService {
     return this.trailRepository.create(createTrailDto, user.id);
   }
 
-  findAll() {
-    return this.trailRepository.findAll();
+  findAll(dto: GetTrailsDto) {
+    return this.trailRepository.findAll(dto);
   }
 
   findOne(id: string) {

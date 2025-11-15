@@ -6,6 +6,8 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTrailDto } from './dto/create-trail.dto';
 import { UpdateTrailDto } from './dto/update-trail.dto';
+import { GetTrailsDto } from './dto/get-trails.dto';
+import { paginate } from 'src/prisma/utils/paginate';
 
 @Injectable()
 export class TrailRepository {
@@ -40,16 +42,18 @@ export class TrailRepository {
     });
   }
 
-  async findAll() {
-    return this.prisma.trail.findMany({
-      orderBy: { createdAt: 'desc' },
-      include: {
+  async findAll(dto: GetTrailsDto) {
+    return paginate(
+      this.prisma.trail,
+      { page: dto.page, pageSize: dto.pageSize },
+      {},
+      {
         creator: { select: { id: true, name: true } },
         _count: { select: { posts: true } },
       },
-    });
+      { createdAt: 'desc' },
+    );
   }
-
   async findOne(id: string) {
     const trail = await this.prisma.trail.findUnique({
       where: { id },
