@@ -39,7 +39,7 @@ model Post {
   description String?
   createdAt DateTime @default(now())
   tags      Tag[] @relation()
-  author    User     @relation(fields: [authorId], references: [id])
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  String
 
   postsOnTrails PostsOnTrails[]
@@ -51,16 +51,16 @@ model Trail {
   description String?
   createdAt   DateTime @default(now())
 
-  creator     User     @relation(fields: [creatorId], references: [id])
+  creator     User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId   String
 
   posts       PostsOnTrails[]
 }
 
 model PostsOnTrails {
-  post    Post   @relation(fields: [postId], references: [id])
+  post    Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId  String
-  trail   Trail  @relation(fields: [trailId], references: [id], onDelete: Cascade) // Deleta a junção se a trilha for deletada
+  trail   Trail  @relation(fields: [trailId], references: [id], onDelete: Cascade)
   trailId String
 
   order   Int

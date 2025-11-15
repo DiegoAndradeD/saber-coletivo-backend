@@ -73,6 +73,7 @@ export class UsersRepository {
   async update(id: string, dto: UpdateUserDto) {
     const data: any = {
       name: dto.name,
+      email: dto.email,
     };
 
     if (dto.password) {

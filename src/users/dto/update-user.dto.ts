@@ -1,5 +1,5 @@
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsOptional, IsString, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsEmail, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @ApiPropertyOptional({
@@ -16,6 +16,10 @@ export class UpdateUserDto {
   })
   @IsOptional()
   @IsString()
-  @MinLength(8, { message: 'A senha deve ter pelo menos 8 caracteres' })
   password?: string;
+
+  @ApiProperty({ example: 'user@example.com' })
+  @IsOptional()
+  @IsEmail()
+  email?: string;
 }
