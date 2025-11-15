@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -54,5 +54,55 @@ export class AuthRepository {
   async generateToken(user: any): Promise<string> {
     const payload = { sub: user.id, email: user.email };
     return this.jwt.signAsync(payload);
+  }
+
+  async me(user: any, token: string) {
+    let validToken = token;
+    try {
+      await this.jwt.verifyAsync(token, { secret: process.env.JWT_SECRET });
+    } catch (err) {
+      validToken = await this.generateToken(user);
+    }
+
+    const userWithRelations = await this.findUserWithRelations(user.id);
+
+    return {
+      ...userWithRelations,
+      token: validToken,
+    };
+  }
+
+  async findUserWithRelations(userId: string) {
+    const user = await this.prisma.user.findFirst({
+      where: { id: userId },
+      include: {
+        posts: {
+          include: {
+            tags: true,
+            postsOnTrails: {
+              include: {
+                trail: true,
+              },
+            },
+          },
+        },
+        trails: {
+          include: {
+            posts: {
+              include: {
+                post: {
+                  include: { tags: true },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!user) throw new Error('Usuário não encontrado');
+
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

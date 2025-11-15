@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,8 +17,7 @@ export class AuthService {
     return this.authRepository.validateUser(loginUserDto);
   }
 
-  async me(user: User) {
-    const { password, ...userWithoutPassword } = user;
-    return userWithoutPassword;
+  async me(user: User, token: string) {
+    return this.authRepository.me(user.id, token);
   }
 }

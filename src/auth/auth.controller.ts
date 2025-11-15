@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UseGuards,
+  Headers,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import {
@@ -39,7 +46,11 @@ export class AuthController {
   @ApiOperation({ summary: 'Obter informações do usuário logado' })
   @ApiResponse({ status: 200, description: 'Informações do usuário.' })
   @ApiResponse({ status: 401, description: 'Não autorizado.' })
-  async getMe(@GetUser() user: User) {
-    return this.authService.me(user);
+  async getMe(
+    @GetUser() user: User,
+    @Headers('authorization') authHeader: string,
+  ) {
+    const token = authHeader?.replace('Bearer ', '');
+    return this.authService.me(user, token);
   }
 }

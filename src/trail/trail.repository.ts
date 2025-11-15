@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import {
   ForbiddenException,
   Injectable,
@@ -7,7 +8,8 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTrailDto } from './dto/create-trail.dto';
 import { UpdateTrailDto } from './dto/update-trail.dto';
 import { GetTrailsDto } from './dto/get-trails.dto';
-import { paginate } from 'src/prisma/utils/paginate';
+import { paginate, PaginatedResult } from 'src/prisma/utils/paginate';
+import { Prisma, Trail } from '@prisma/client';
 
 @Injectable()
 export class TrailRepository {
@@ -42,18 +44,43 @@ export class TrailRepository {
     });
   }
 
-  async findAll(dto: GetTrailsDto) {
+  async findAll(dto: GetTrailsDto): Promise<PaginatedResult<Trail>> {
+    const { search, creatorId, sort } = dto;
+
+    const where: Prisma.TrailWhereInput = {};
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (creatorId) {
+      where.creatorId = creatorId;
+    }
+    const validSorts = ['asc', 'desc'] as const;
+
+    const sortOrder: 'asc' | 'desc' = validSorts.includes(sort as any)
+      ? (sort as 'asc' | 'desc')
+      : 'desc';
+
+    const orderBy: Prisma.TrailOrderByWithRelationInput = {
+      createdAt: sortOrder,
+    };
+
     return paginate(
       this.prisma.trail,
       { page: dto.page, pageSize: dto.pageSize },
-      {},
+      where,
       {
         creator: { select: { id: true, name: true } },
         _count: { select: { posts: true } },
       },
-      { createdAt: 'desc' },
+      orderBy,
     );
   }
+
   async findOne(id: string) {
     const trail = await this.prisma.trail.findUnique({
       where: { id },
@@ -64,7 +91,7 @@ export class TrailRepository {
           include: {
             post: {
               include: {
-                author: { select: { id: true, name: true } },
+                author: true,
                 tags: true,
               },
             },

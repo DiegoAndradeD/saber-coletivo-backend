@@ -99,7 +99,7 @@ async function main() {
       data: {
         title: faker.lorem.sentence(),
         description: faker.lorem.sentence(),
-        content: faker.lorem.paragraphs(3),
+        content: faker.lorem.paragraphs(100),
         authorId: getRandomElement(users).id, // Associa a um autor aleatório
         tags: {
           connect: postTagsConnect, // Conecta às tags aleatórias
