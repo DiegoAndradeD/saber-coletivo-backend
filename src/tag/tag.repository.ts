@@ -59,7 +59,7 @@ export class TagRepository {
     const total = await this.prisma.tag.count();
 
     return {
-      data: tags.map((t) => ({ ...t, postCount: Number(t.postCount) })),
+      items: tags.map((t) => ({ ...t, postCount: Number(t.postCount) })),
       page,
       pageSize,
       total,

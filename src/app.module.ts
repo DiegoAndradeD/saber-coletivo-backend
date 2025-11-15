@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { PostModule } from './post/post.module';
 import { TagModule } from './tag/tag.module';
 import { TrailModule } from './trail/trail.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { TrailModule } from './trail/trail.module';
     PostModule,
     TagModule,
     TrailModule,
+    UsersModule,
   ],
   controllers: [],
   providers: [],
