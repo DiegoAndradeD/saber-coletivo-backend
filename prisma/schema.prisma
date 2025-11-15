@@ -36,6 +36,7 @@ model Post {
   id        String   @id @default(uuid())
   title     String
   content   String
+  description String?
   createdAt DateTime @default(now())
   tags      Tag[] @relation()
   author    User     @relation(fields: [authorId], references: [id])

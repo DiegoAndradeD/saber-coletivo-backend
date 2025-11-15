@@ -98,6 +98,7 @@ async function main() {
     const post = await prisma.post.create({
       data: {
         title: faker.lorem.sentence(),
+        description: faker.lorem.sentence(),
         content: faker.lorem.paragraphs(3),
         authorId: getRandomElement(users).id, // Associa a um autor aleatório
         tags: {

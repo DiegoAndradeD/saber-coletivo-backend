@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsNotEmpty, IsString } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreatePostDto {
   @ApiProperty({ example: 'Como fazer um currículo' })
@@ -11,6 +11,11 @@ export class CreatePostDto {
   @IsString()
   @IsNotEmpty()
   content: string;
+
+  @ApiPropertyOptional({ example: 'Um breve resumo do post.' })
+  @IsString()
+  @IsOptional()
+  description?: string;
 
   @ApiProperty({ example: ['currículo', 'emprego', 'finanças'] })
   @IsArray()

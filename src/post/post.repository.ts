@@ -49,15 +49,49 @@ export class PostRepository {
   }
 
   async findAll(dto: GetPostsDto = {}): Promise<PaginatedResult<Post>> {
+    const { search, authorId, tags, trailId, sort } = dto;
+
+    const where: any = {};
+
+    if (search) {
+      where.OR = [
+        { title: { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ];
+    }
+
+    if (authorId) {
+      where.authorId = authorId;
+    }
+
+    if (tags) {
+      where.tags = {
+        some: {
+          id: { in: tags },
+        },
+      };
+    }
+
+    if (trailId) {
+      where.postsOnTrails = {
+        some: {
+          trailId,
+        },
+      };
+    }
+
+    const orderBy = { createdAt: sort || 'desc' };
+
     return paginate(
       this.prisma.post,
       { page: dto.page, pageSize: dto.pageSize },
-      {},
+      where,
       {
         author: { select: { id: true, name: true } },
         tags: true,
+        postsOnTrails: { include: { trail: true } },
       },
-      { createdAt: 'desc' },
+      orderBy,
     );
   }
 

@@ -12,6 +12,11 @@ export class UpdatePostDto {
   @IsString()
   content?: string;
 
+  @ApiPropertyOptional({ example: 'Um breve resumo do post.' })
+  @IsString()
+  @IsOptional()
+  description?: string;
+
   @ApiPropertyOptional({ example: ['curriculo', 'carreira'] })
   @IsOptional()
   @IsArray()

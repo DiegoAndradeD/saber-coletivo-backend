@@ -38,4 +38,32 @@ export class TagRepository {
 
     return tagWithPosts;
   }
+
+  async findMostPopularPaginated(page = 1, pageSize = 10) {
+    const offset = (page - 1) * pageSize;
+
+    const tags = await this.prisma.$queryRaw<
+      { id: string; name: string; postCount: bigint }[]
+    >`
+    SELECT
+      t.id,
+      t.name,
+      COUNT(pt."A") AS "postCount"
+    FROM "Tag" t
+    LEFT JOIN "_PostToTag" pt ON pt."B" = t.id
+    GROUP BY t.id, t.name
+    ORDER BY "postCount" DESC
+    LIMIT ${pageSize} OFFSET ${offset};
+  `;
+
+    const total = await this.prisma.tag.count();
+
+    return {
+      data: tags.map((t) => ({ ...t, postCount: Number(t.postCount) })),
+      page,
+      pageSize,
+      total,
+      totalPages: Math.ceil(total / pageSize),
+    };
+  }
 }

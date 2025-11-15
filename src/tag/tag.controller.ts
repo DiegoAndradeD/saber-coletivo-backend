@@ -22,4 +22,17 @@ export class TagController {
   findPostsByTagName(@Param('name') name: string) {
     return this.tagService.findPostsByTagName(name);
   }
+
+  @Get('popular')
+  @ApiOperation({ summary: 'Listar tags mais populares paginadas' })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de tags populares com paginação.',
+  })
+  findMostPopular(@Query() dto: GetTagsDto) {
+    return this.tagService.findMostPopular(
+      Number(dto.page),
+      Number(dto.pageSize),
+    );
+  }
 }

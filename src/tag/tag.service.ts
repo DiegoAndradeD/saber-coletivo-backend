@@ -12,4 +12,8 @@ export class TagService {
   async findPostsByTagName(tagName: string) {
     return this.tagRepository.findPostsByTagName(tagName);
   }
+
+  async findMostPopular(page?: number, pageSize?: number) {
+    return this.tagRepository.findMostPopularPaginated(page, pageSize);
+  }
 }
