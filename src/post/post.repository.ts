@@ -38,6 +38,7 @@ export class PostRepository {
       data: {
         title: dto.title,
         content: dto.content,
+        description: dto.description,
         authorId: authorId,
         tags: tagData,
       },
@@ -129,6 +130,7 @@ export class PostRepository {
     const data: any = {
       title: dto.title,
       content: dto.content,
+      description: dto.description,
     };
 
     if (dto.tags) {
