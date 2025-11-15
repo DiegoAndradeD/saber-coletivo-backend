@@ -134,10 +134,12 @@ export class UsersRepository {
 
     return {
       items: authors.map((a) => ({ ...a, postCount: Number(a.postCount) })),
-      page,
-      pageSize,
-      total,
-      totalPages: Math.ceil(total / pageSize),
+      pagination: {
+        currentPage: page,
+        pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize),
+      },
     };
   }
 }

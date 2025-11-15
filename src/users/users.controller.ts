@@ -27,6 +27,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Get('most-active')
+  @ApiOperation({ summary: 'Listar autores com mais posts' })
+  @ApiResponse({ status: 200, description: 'Lista de autores mais ativos.' })
+  findMostActiveAuthors(@Query() dto: GetUsersDto) {
+    return this.usersService.findMostActiveAuthorsPaginated(dto);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Listar todos os usuários (perfis públicos)' })
   @ApiResponse({ status: 200, description: 'Lista de usuários.' })
@@ -60,15 +67,5 @@ export class UsersController {
   @ApiResponse({ status: 401, description: 'Não autorizado.' })
   remove(@GetUser() user: User) {
     return this.usersService.remove(user.id);
-  }
-
-  @Get('most-active')
-  @ApiOperation({ summary: 'Listar autores com mais posts' })
-  @ApiResponse({ status: 200, description: 'Lista de autores mais ativos.' })
-  findMostActiveAuthors(
-    @Query('page') page: number = 1,
-    @Query('pageSize') pageSize: number = 10,
-  ) {
-    return this.usersService.findMostActiveAuthorsPaginated(page, pageSize);
   }
 }

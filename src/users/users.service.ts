@@ -23,7 +23,10 @@ export class UsersService {
     return this.usersRepository.remove(id);
   }
 
-  findMostActiveAuthorsPaginated(page = 1, pageSize = 10) {
-    return this.usersRepository.findMostActiveAuthorsPaginated(page, pageSize);
+  findMostActiveAuthorsPaginated(dto: GetUsersDto) {
+    return this.usersRepository.findMostActiveAuthorsPaginated(
+      Number(dto.page),
+      Number(dto.pageSize),
+    );
   }
 }

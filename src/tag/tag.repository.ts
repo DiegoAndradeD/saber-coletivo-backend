@@ -60,10 +60,12 @@ export class TagRepository {
 
     return {
       items: tags.map((t) => ({ ...t, postCount: Number(t.postCount) })),
-      page,
-      pageSize,
-      total,
-      totalPages: Math.ceil(total / pageSize),
+      pagination: {
+        currentPage: page,
+        pageSize,
+        total,
+        totalPages: Math.ceil(total / pageSize),
+      },
     };
   }
 }
