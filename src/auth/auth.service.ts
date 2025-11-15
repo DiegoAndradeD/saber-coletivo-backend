@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/require-await */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthRepository } from './auth.repository';
 import { LoginUserDto } from './dto/login-user.dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -14,5 +17,10 @@ export class AuthService {
 
   async login(loginUserDto: LoginUserDto) {
     return this.authRepository.validateUser(loginUserDto);
+  }
+
+  async me(user: User) {
+    const { password, ...userWithoutPassword } = user;
+    return userWithoutPassword;
   }
 }

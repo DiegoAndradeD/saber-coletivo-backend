@@ -1,16 +1,19 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { paginate } from 'src/prisma/utils/paginate';
 
 @Injectable()
 export class TagRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.tag.findMany({
-      orderBy: {
-        name: 'asc',
-      },
-    });
+  async findAllPaginated(page = 1, pageSize = 10) {
+    return paginate(
+      this.prisma.tag,
+      { page, pageSize },
+      {},
+      {},
+      { name: 'asc' },
+    );
   }
 
   async findPostsByTagName(tagName: string) {

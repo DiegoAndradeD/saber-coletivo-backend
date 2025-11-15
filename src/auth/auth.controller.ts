@@ -1,8 +1,16 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from './decorators/get-user.decorator';
+import type { User } from '@prisma/client';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -23,5 +31,15 @@ export class AuthController {
   @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
   async login(@Body() dto: LoginUserDto): Promise<any> {
     return this.authService.login(dto);
+  }
+
+  @Get('me')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Obter informações do usuário logado' })
+  @ApiResponse({ status: 200, description: 'Informações do usuário.' })
+  @ApiResponse({ status: 401, description: 'Não autorizado.' })
+  async getMe(@GetUser() user: User) {
+    return this.authService.me(user);
   }
 }

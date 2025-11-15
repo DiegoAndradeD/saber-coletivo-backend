@@ -5,8 +5,8 @@ import { TagRepository } from './tag.repository';
 export class TagService {
   constructor(private tagRepository: TagRepository) {}
 
-  async findAll() {
-    return this.tagRepository.findAll();
+  async findAll(page?: number, pageSize?: number) {
+    return this.tagRepository.findAllPaginated(page, pageSize);
   }
 
   async findPostsByTagName(tagName: string) {

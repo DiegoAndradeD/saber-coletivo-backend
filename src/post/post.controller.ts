@@ -8,6 +8,7 @@ import {
   Delete,
   UseGuards,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { PostService } from './post.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -21,6 +22,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/auth/decorators/get-user.decorator';
 import type { User } from '@prisma/client';
+import { GetPostsDto } from './dto/get-posts.dto';
 
 @ApiTags('post')
 @Controller('post')
@@ -40,8 +42,8 @@ export class PostController {
   @Get()
   @ApiOperation({ summary: 'Listar todos os posts' })
   @ApiResponse({ status: 200, description: 'Lista de posts.' })
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query() dto: GetPostsDto) {
+    return this.postService.findAll(dto);
   }
 
   @Get(':id')

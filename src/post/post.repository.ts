@@ -9,6 +9,9 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { paginate, PaginatedResult } from 'src/prisma/utils/paginate';
+import { Post } from '@prisma/client';
+import { GetPostsDto } from './dto/get-posts.dto';
 
 @Injectable()
 export class PostRepository {
@@ -45,14 +48,17 @@ export class PostRepository {
     });
   }
 
-  async findAll() {
-    return this.prisma.post.findMany({
-      orderBy: { createdAt: 'desc' },
-      include: {
+  async findAll(dto: GetPostsDto = {}): Promise<PaginatedResult<Post>> {
+    return paginate(
+      this.prisma.post,
+      { page: dto.page, pageSize: dto.pageSize },
+      {},
+      {
         author: { select: { id: true, name: true } },
         tags: true,
       },
-    });
+      { createdAt: 'desc' },
+    );
   }
 
   async findOne(id: string) {

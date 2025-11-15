@@ -3,6 +3,7 @@ import { PostRepository } from './post.repository';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { User } from '@prisma/client';
+import { GetPostsDto } from './dto/get-posts.dto';
 
 @Injectable()
 export class PostService {
@@ -12,8 +13,8 @@ export class PostService {
     return this.postRepository.create(createPostDto, user.id);
   }
 
-  async findAll() {
-    return this.postRepository.findAll();
+  async findAll(dto: GetPostsDto) {
+    return this.postRepository.findAll(dto);
   }
 
   async findOne(id: string) {
