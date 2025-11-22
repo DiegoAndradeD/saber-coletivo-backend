@@ -18,6 +18,6 @@ export class AuthService {
   }
 
   async me(user: User, token: string) {
-    return this.authRepository.me(user.id, token);
+    return this.authRepository.me(user, token);
   }
 }

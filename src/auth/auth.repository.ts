@@ -65,7 +65,6 @@ export class AuthRepository {
     }
 
     const userWithRelations = await this.findUserWithRelations(user.id);
-
     return {
       ...userWithRelations,
       token: validToken,
